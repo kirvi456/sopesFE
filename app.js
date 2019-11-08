@@ -14,15 +14,11 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.route('/mensajes').get(function(req, res)
 
     {
-            var cursor = db.collection('mensajes').find();
-		cursor.each(function(err, item) {
-
-                if (item != null) {
-                    str = str + "    Employee id  " + item.usuario + "</br>";
-                }
-            });           	
-            res.send(str);
-        
+        var cursor = db.collection('mensajes').find().toArray(function(err, result){
+            if (err) throw err;
+            return resolve(result);
+        });          	
+        res.send(cursor);        
     });
 
 var server = app.listen(3000, function() {}); 
