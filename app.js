@@ -3,8 +3,8 @@ var app = express();
 var str = "";
 
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://34.66.43.182/sopes';
-mongoose.connect(mongoDB);
+var mongoDB = 'mongodb://34.66.43.182:27017/sopes';
+mongoose.connect(mongoDB,{ useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 
@@ -15,12 +15,12 @@ app.route('/mensajes').get(function(req, res)
 
     {
             var cursor = db.collection('mensajes').find();
-            cursor.each(function(err, item) {
+		cursor.each(function(err, item) {
 
                 if (item != null) {
-                    str = str + "    Employee id  " + item.Employeeid + "</br>";
+                    str = str + "    Employee id  " + item.usuario + "</br>";
                 }
-            });
+            });           	
             res.send(str);
         
     });
