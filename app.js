@@ -15,7 +15,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.listen(5000, function() {}); 
 
 app.route('/informacion').get(function(req, res){
-        var cursor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
+        var cursor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).toArray(function(err, resultado){
                 if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
                 res.json(resultado);
         });             
