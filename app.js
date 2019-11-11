@@ -12,8 +12,14 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-app.listen(3000, function() {}); 
+app.listen(5000, function() {}); 
 
+app.route('/informacion').get(function(req, res){
+        var cursor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
+                if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
+                res.json(resultado);
+        });             
+});
 
 app.route('/buscarUsuario').get(function(req, res){
 	var usuarioABuscar = req.body.usuario;
