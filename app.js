@@ -18,11 +18,14 @@ app.route('/informacion').get(async function(req, res){
 	Promise.all([
 		new Promise(function(resolve, reject){
 			db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
-			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-			return resolve(resultado);
+				if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
+				return resolve(resultado);
 		})}),
 		new Promise(function(resolve, reject){
-			db.collection('mensajes').countDocuments({})
+			db.collection('mensajes').count().then(function(err,count){
+				if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
+				return resolve(count);	
+			})
 		}),
 		new Promise(function(resolve, reject){
 			db.collection('mensajes').aggregate([{$group: {_id: "$categoria"}}]).toArray(function(err, resultado){
