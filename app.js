@@ -22,7 +22,7 @@ app.route('/informacion').get(async function(req, res){
 				return resolve(resultado);
 		})}),
 		new Promise(function(resolve, reject){
-			db.collection('mensajes').countDocuments({}).then(function(err,count){
+			db.collection('mensajes').countDocuments({},function(err,count){
 				if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
 				return resolve(count);	
 			})
