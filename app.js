@@ -22,15 +22,28 @@ app.route('/informacion').get(async function(req, res){
 			return resolve(resultado);
 		})}),
 		new Promise(function(resolve, reject){
-			db.collection('mensajes').countDocuments({}).toArray(function(err, resultado){
+			db.collection('mensajes').aggregate([{$group: {_id: "$categoria"}}]).toArray(function(err, resultado){
+			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
+			return resolve(resultado);
+		})}),
+		new Promise (function(resolve, reject){
+			db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
+			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
+			return resolve(resultado);
+		})}),
+		new Promise (function(resolve, reject){
+			db.collection('mensajes').aggregate([{$group: {_id: "$categoria", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
 			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
 			return resolve(resultado);
 		})})
-	]).then( ([item1, item2]) => {
+	]).then( ([item1, item2, item3, item4]) => {
 		console.log(item1);
 		console.log("-----------------------------");
 		console.log(item2);
-		
+		console.log("-----------------------------");
+		console.log(item3);
+		console.log("-----------------------------");
+		console.log(item4);
 		res.send("respuesta");
 	}).catch(function(err){
 		res.send(err);
