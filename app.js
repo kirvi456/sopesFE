@@ -15,20 +15,17 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.listen(5000, function() {}); 
 
 app.route('/informacion').get(async function(req, res){
-	var jsonvar = '{';
-	let total_usuarios = await db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
-		if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-		jsonvar += '"total_usuarios": ' + resultado.length + ",";
-		console.log(jsonvar);
-	});     
-    let usuario_mayor = await db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
-		if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-		jsonvar += '"usuario_mayor": ' + '"' + resultado[0]['_id'] + '"';
-		console.log(jsonvar);
-	});             
-	jsonvar += '}';
-	console.log(jsonvar);
-	res.send(jsonvar);
+	Promise.all([
+		db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]),
+		db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1})
+	]).then( ([item1, item2]) => {
+		console.log(item1);
+		console.log("-----------------------------");
+		console.log(item2);
+		res.send("respuesta");
+	}).catch(function(err){
+		res.send(err);
+	});
 });
 
 app.route('/buscarUsuario').get(function(req, res){
