@@ -22,6 +22,9 @@ app.route('/informacion').get(async function(req, res){
 			return resolve(resultado);
 		})}),
 		new Promise(function(resolve, reject){
+			db.collection('mensajes').countDocuments({})
+		}),
+		new Promise(function(resolve, reject){
 			db.collection('mensajes').aggregate([{$group: {_id: "$categoria"}}]).toArray(function(err, resultado){
 			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
 			return resolve(resultado);
@@ -36,7 +39,7 @@ app.route('/informacion').get(async function(req, res){
 			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
 			return resolve(resultado);
 		})})
-	]).then( ([item1, item2, item3, item4]) => {
+	]).then( ([item1, item2, item3, item4, item5]) => {
 		console.log(item1);
 		console.log("-----------------------------");
 		console.log(item2);
@@ -44,6 +47,8 @@ app.route('/informacion').get(async function(req, res){
 		console.log(item3);
 		console.log("-----------------------------");
 		console.log(item4);
+		console.log("-----------------------------");
+		console.log(item5);
 		res.send("respuesta");
 	}).catch(function(err){
 		res.send(err);
