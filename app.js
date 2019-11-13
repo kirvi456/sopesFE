@@ -43,16 +43,20 @@ app.route('/informacion').get(async function(req, res){
 			return resolve(resultado);
 		})})
 	]).then( ([item1, item2, item3, item4, item5]) => {
-		console.log(item1);
-		console.log("-----------------------------");
-		console.log(item2);
-		console.log("-----------------------------");
-		console.log(item3);
-		console.log("-----------------------------");
-		console.log(item4);
-		console.log("-----------------------------");
-		console.log(item5);
-		res.send("respuesta");
+		res.send(
+			JSON.parse(
+				`{
+					"item1" : "${item1.length}",
+					"item2" : "${item2}",
+					"item3" : "${item3.length}",
+					"item4"	: "${item4[0]["_id"]}",
+					"item5" : "${item5[0]["_id"]}"
+
+				}`
+			)
+		);
+		
+		
 	}).catch(function(err){
 		res.send(err);
 	});
