@@ -15,10 +15,17 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.listen(5000, function() {}); 
 
 app.route('/informacion').get(function(req, res){
-        var cursor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).toArray(function(err, resultado){
-                if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
-                res.json(resultado);
-        });             
+	var jsonvar = '{';
+	let total_usuarios = db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
+		if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
+		jsonvar += '"total_usuarios": ' + resultado.length + ",";
+	});     
+    let usuario_mayor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
+		if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
+		jsonvar += '"usuario_mayor": ' + '"' + resultado[0]['usuario'] + '"'
+	});             
+	jsonvar += "}";
+	res.send(jsonvar);
 });
 
 app.route('/buscarUsuario').get(function(req, res){
