@@ -23,10 +23,11 @@ app.route('/informacion').get(function(req, res){
 	});     
     let usuario_mayor = db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
 		if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-		jsonvar += '"usuario_mayor": ' + '"' + resultado[0]['usuario'] + '"';
+		jsonvar += '"usuario_mayor": ' + '"' + resultado[0]['_id'] + '"';
 		console.log(jsonvar);
 	});             
 	jsonvar += '}';
+	console.log(jsonvar);
 	res.send(jsonvar);
 });
 
