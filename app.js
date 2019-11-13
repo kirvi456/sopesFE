@@ -16,14 +16,16 @@ app.listen(5000, function() {});
 
 app.route('/informacion').get(async function(req, res){
 	Promise.all([
-		db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
+		new Promise(function(resolve, reject){
+			db.collection('mensajes').aggregate([{$group: {_id: "$usuario"}}]).toArray(function(err, resultado){
 			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-			resolve(resultado);
-		}),
-		db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
+			return resolve(resultado);
+		})}),
+		new Promise (function(resolve, reject){
+			db.collection('mensajes').aggregate([{$group: {_id: "$usuario", count: {$sum: 1}}}]).sort({count: -1}).toArray(function(err, resultado){
 			if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");
-			resolve(resultado);
-		})
+			return resolve(resultado);
+		})})
 	]).then( ([item1, item2]) => {
 		console.log(item1);
 		console.log("-----------------------------");
