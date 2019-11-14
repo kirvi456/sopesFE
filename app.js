@@ -66,7 +66,7 @@ app.route('/informacion').get(async function(req, res){
 
 app.route('/buscarUsuario').post(function(req, res){
 	var usuarioABuscar = req.body.usuario;
-        var cursor = db.collection('mensajes').find({usuario: usuarioABuscar }).limit(3).toArray(function(err, resultado){
+        var cursor = db.collection('mensajes').find({usuario: usuarioABuscar }).limit(5).toArray(function(err, resultado){
                 if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
                 res.json(resultado);
         });             
@@ -74,14 +74,14 @@ app.route('/buscarUsuario').post(function(req, res){
 
 app.route('/buscarCategoria').get(function(req, res){
         var categoriaABuscar = req.body.categoria;
-        var cursor = db.collection('mensajes').find({categoria: categoriaABuscar }).limit(3).toArray(function(err, resultado){
+        var cursor = db.collection('mensajes').find({categoria: categoriaABuscar }).limit(5).toArray(function(err, resultado){
                 if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
                 res.json(resultado);
         });             
     });
 
 app.route('/mensajes').get(function(req, res){
-        var cursor = db.collection('mensajes').find().sort({datetime : -1}).toArray(function(err, resultado){
+        var cursor = db.collection('mensajes').find().sort({datetime : -1}).limit(50).toArray(function(err, resultado){
 		if(err) throw res.status(400).send("unable to save to database");;
 		res.json(resultado);
 
