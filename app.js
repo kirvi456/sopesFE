@@ -72,7 +72,7 @@ app.route('/buscarUsuario').post(function(req, res){
         });             
     });
 
-app.route('/buscarCategoria').get(function(req, res){
+app.route('/buscarCategoria').post(function(req, res){
         var categoriaABuscar = req.body.categoria;
         var cursor = db.collection('mensajes').find({categoria: categoriaABuscar }).limit(5).toArray(function(err, resultado){
                 if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
