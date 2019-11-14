@@ -64,7 +64,7 @@ app.route('/informacion').get(async function(req, res){
 	});
 });
 
-app.route('/buscarUsuario').get(function(req, res){
+app.route('/buscarUsuario').post(function(req, res){
 	var usuarioABuscar = req.body.usuario;
         var cursor = db.collection('mensajes').find({usuario: usuarioABuscar }).limit(3).toArray(function(err, resultado){
                 if(err) throw res.status(400).send("No se pudo conectar a la base de datos.");;
